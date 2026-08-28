@@ -1,0 +1,13 @@
+[Unit]
+Description=Barkan L3/L4 XDP Ingress Shield
+After=network.target
+Before=94lu-factory.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/barkan/load_shield.sh
+ExecStop=/bin/bash -c "ip link set dev enp0s31f6 xdp off 2>/dev/null || true; rm -f /sys/fs/bpf/xdp_ingress_shield 2>/dev/null || true"
+
+[Install]
+WantedBy=multi-user.target
