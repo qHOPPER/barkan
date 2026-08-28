@@ -1,13 +1,12 @@
 [Unit]
-Description=Barkan L3/L4 XDP Ingress Shield
+Description=Barkan V3: Stealth Auth & Distributed Ingress Shield
 After=network.target
-Before=94lu-factory.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/opt/barkan/load_shield.sh
-ExecStop=/bin/bash -c "ip link set dev enp0s31f6 xdp off 2>/dev/null || true; rm -f /sys/fs/bpf/xdp_ingress_shield 2>/dev/null || true"
+ExecStop=/bin/bash -c "ip link set dev enp0s31f6 xdp off 2>/dev/null || true; bpftool cgroup detach /sys/fs/cgroup/ sock_ops pinned /sys/fs/bpf/barkan_sockops 2>/dev/null || true; rm -f /sys/fs/bpf/barkan_sockops 2>/dev/null || true"
 
 [Install]
 WantedBy=multi-user.target
